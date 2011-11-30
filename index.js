@@ -32,6 +32,10 @@ var handler = bouncy.handler = function (cb, c) {
             stream.write(buf);
         }
         
+        req.socket.on('close', function() {
+           stream.end(); 
+        });
+
         req.on('rawHead', onData);
         req.on('rawBody', onData);
         

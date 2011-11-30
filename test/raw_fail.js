@@ -1,5 +1,5 @@
 var test = require('tap').test;
-var bouncy = require('bouncy');
+var bouncy = require('../');
 var net = require('net');
 
 test('raw without a host', function (t) {

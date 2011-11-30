@@ -1,5 +1,5 @@
 var test = require('tap').test;
-var bouncy = require('bouncy');
+var bouncy = require('../');
 var http = require('http');
 var Stream = require('net').Stream;
 

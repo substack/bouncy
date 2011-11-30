@@ -25,6 +25,8 @@ var bouncy = module.exports = function (opts, cb) {
 
 var handler = bouncy.handler = function (cb, c) {
     parsley(c, function (req) {
+        c.setMaxListeners(0);
+        
         var stream = new BufferedStream;
         stream.pause();
         

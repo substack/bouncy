@@ -1,5 +1,5 @@
 var test = require('tap').test;
-var bouncy = require('bouncy');
+var bouncy = require('../');
 var net = require('net');
 var EventEmitter = require('events').EventEmitter;
 

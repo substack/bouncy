@@ -103,5 +103,12 @@ function makeBounce (bs, client, req) {
         return res;
     };
     
+    bounce.redirect = function (to) {
+        var res = bounce.respond();
+        res.statusCode = 302;
+        res.setHeader('Location', to);
+        res.end('Redirecting to <a href="' + to + '">' + to + '</a>');
+    };
+    
     return bounce;
 }

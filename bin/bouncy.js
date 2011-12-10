@@ -20,6 +20,10 @@ bouncy(function (req, bounce) {
         route = route[Math.floor(Math.random() * route.length)];
     }
     
+    req.on('error', function(err) {
+        req.destroy();
+    });
+    
     if (typeof route === 'string') {
         var s = route.split(':');
         if (s[1]) {

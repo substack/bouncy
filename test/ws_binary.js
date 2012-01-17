@@ -9,7 +9,7 @@ test('ws_binary', function (t) {
 
     var randomBuf = new Buffer(5*1024*1024);
     for (var i = 0, l = randomBuf.length; i < l; ++i) {
-        randomBuf[i] = ~~(Math.random() * 256);
+        randomBuf[i] = ~~(Math.random() * 255);
     }
     
     var p0 = Math.floor(Math.random() * (Math.pow(2,16) - 1e4) + 1e4);

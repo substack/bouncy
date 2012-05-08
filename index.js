@@ -11,20 +11,28 @@ var net = require('net');
 var tls = require('tls');
 
 var bouncy = module.exports = function (opts, cb) {
-    if (typeof opts === 'function') {
-        cb = opts;
-        opts = {};
-    }
+    if (typeof opts === 'function')
+        opts = { callback: opts };
+    opts = opts || {};
+    if (typeof cb === 'function')
+        opts.callback = cb;
     
-    if (opts && opts.key && opts.cert) {
-        return tls.createServer(opts, handler.bind(null, cb));
+    if (opts.key && opts.cert) {
+        return tls.createServer(opts, handler.bind(null, opts));
     }
     else {
-        return net.createServer(handler.bind(null, cb));
+        return net.createServer(handler.bind(null, opts));
     }
 };
 
-var handler = bouncy.handler = function (cb, c) {
+var handler = bouncy.handler = function (opts, c) {
+    // If we don't handle socket errors, the server will die when a
+    // connection times out.
+    c.on('error', function (err) {
+        if (opts.onConnectionError)
+            opts.onConnectionError(err, c);
+    });
+
     var parser = parsley(c, function (req) {
         c.setMaxListeners(0);
         
@@ -52,14 +60,14 @@ var handler = bouncy.handler = function (cb, c) {
             // don't kill the server on subsequent request errors
             req.on('error', function () {});
             var bounce = makeBounce(stream, c, req, parser);
-            cb(req, bounce);
+            opts.callback(req, bounce);
         }
         req.on('headers', onHeaders);
         
         function onError (err) {
             req.removeListener('headers', onHeaders);
             var bounce = makeBounce(stream, c, req, parser);
-            cb(req, bounce);
+            opts.callback(req, bounce);
             req.emit('error', err);
         }
         req.once('error', onError);

@@ -64,7 +64,12 @@ bouncy(opts={}, cb)
 If you specify `opts.key` and `opts.cert`, the connection will be set to secure
 mode using tls. Do this if you want to make an https router.
 
-Your callback `cb` will get these arguments:
+You can specify a handler `opts.onConnectionError` which will be called
+when a connection from a client has an error.  Your handler will be passed
+the error and the socket to the client.
+
+You may specify your callback either as an argument, or as `opts.callback`.
+Your callback will get these arguments:
 
 req
 ---

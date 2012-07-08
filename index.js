@@ -86,6 +86,9 @@ function makeBounce (bs, client, req, parser) {
             opts.headers['x-forwarded-proto'] =
                 client.encrypted ? 'https' : 'http';
         }
+        if (opts.host && bs.chunks[4].toString() === 'Host:') {
+            bs.chunks[5] = new Buffer(' ' + opts.host + '\r\n');
+        }
         
         insertHeaders(bs.chunks, opts.headers);
         if (opts.path) updatePath(bs.chunks, opts.path);

@@ -86,6 +86,13 @@ function makeBounce (bs, client, req, parser) {
             opts.headers['x-forwarded-proto'] =
                 client.encrypted ? 'https' : 'http';
         }
+        if (!('Connection' in opts.headers)) {
+            // By default, with HTTP/1.1 all connections are persistent.
+            // If we leave them persistent, then we'll keep a lot of
+            // unnecessary connections around, resulting in slowness and
+            // "possible EventEmitter memory leak detected" warnings.
+            opts.headers['Connection'] = 'close';
+        }
         
         insertHeaders(bs.chunks, opts.headers);
         if (opts.path) updatePath(bs.chunks, opts.path);

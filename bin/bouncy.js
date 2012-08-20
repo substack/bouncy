@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 var configFile = process.argv[2];
 var port = parseInt(process.argv[3], 10);
+var key = process.argv[4];
+var cert = process.argv[5];
 
 if (!configFile || !port) {
-    console.error('Usage: bouncy [routes.json] [port]');
+    console.error('Usage: bouncy [routes.json] [port] [keyfile] [certfile]');
     process.exit(1);
 }
 
 var fs = require('fs');
 var config = JSON.parse(fs.readFileSync(configFile));
 
+var opts = {};
+if (key && cert) {
+    opts.key = fs.readFileSync(key);
+    opts.cert = fs.readFileSync(cert);
+}
+
 var bouncy = require('bouncy');
-bouncy(function (req, bounce) {
+bouncy(opts, function (req, bounce) {
     var host = (req.headers.host || '').replace(/:\d+$/, '');
     var route = config[host] || config[''];
     

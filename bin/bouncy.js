@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var configFile = process.argv[2];
 var port = parseInt(process.argv[3], 10);
+var address = process.argv[4] || '0.0.0.0';
 
 if (!configFile || !port) {
     console.error('Usage: bouncy [routes.json] [port]');
@@ -45,4 +46,4 @@ bouncy(function (req, bounce) {
         res.write('no such host');
         res.end();
     }
-}).listen(port);
+}).listen(port, address);

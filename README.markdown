@@ -35,7 +35,7 @@ bouncy(function (req, bounce) {
 ````
 
 command-line
-============
+------------
 
 Just create a `routes.json` file like this:
 
@@ -56,25 +56,27 @@ Use a colon-separated string to specify a host and port in a route.
 
 Use `""` for the host as a default route.
 
-bouncy(opts={}, cb)
-===================
+methods
+=======
+
+### bouncy(opts={}, cb)
 
 `bouncy(cb)` returns a new net.Server object that you can `.listen()` on.
 
 If you specify `opts.key` and `opts.cert`, the connection will be set to secure
-mode using tls. Do this if you want to make an https router.
+mode using tls. Do this if you want to make an https router. If you are using more
+than one SSL cert, add `opts.SNICallback`. See the example http-https-sni.js and the
+[nodejs tls page](http://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener) for details.
 
-Your callback `cb` will get these arguments:
+Your callback `cb` will get the arguments req and bounce.
 
-req
----
+#### req
 
 The node http module request object.
 
 To catch parse errors, listen for the "error" event.
 
-bounce(stream, opts={})
------------------------
+#### bounce(stream, opts={})
 
 Call this function when you're ready to bounce the request to a stream.
 
@@ -100,8 +102,9 @@ don't pass in an `opts.emitter`, the connection will be `.destroy()`ed.
 `bounce()` returns the stream object that it's using. This is useful if you pass
 in a port so you can `.on('error', fn)` to detect connection errors.
 
-bounce(port, ...), bounce(host, port, ...), bounce(url)
--------------------------------------------------------
+#### bounce(port, ...)
+#### bounce(host, port, ...)
+#### bounce(url)
 
 These variants of `bounce()` are sugar for
 `bounce(net.createConnection(port))`
@@ -113,33 +116,28 @@ Optionally you can pass port and host keys to `opts` and it does the same thing.
 Passing `bounce()` a string that looks like a url (with or without `"http://"`)
 will set the opts.host, opts.port, and opts.path accordingly.
 
-bounce.respond()
-----------------
+#### bounce.respond()
 
 Return a new HTTP response object for the request.
 This is useful if you need to write an error result.
 
-bounce.upgrade()
-----------------
+#### bounce.upgrade()
 
 Manually upgrade the connection using
 [parsley](https://github.com/substack/node-parsley).
 
-bounce.reset()
---------------
+#### bounce.reset()
 
 Discard all buffered data. This is sometimes useful for upgraded connections.
 
 attributes
 ==========
 
-bounce.parser
--------------
+####bounce.parser
 
 The [parsley](https://github.com/substack/node-parsley) parser being used.
 
-bounce.stream
--------------
+#### bounce.stream
 
 The [buffered stream](https://github.com/mikeal/morestreams) used to buffer the
 headers and body until bounce() is called.

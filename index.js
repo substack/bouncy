@@ -26,7 +26,10 @@ var bouncy = module.exports = function (opts, cb) {
     server.on('upgrade', function (req, sock, buf) {
         if (req.headers.upgrade || req.method === 'CONNECT') {
             var bounce = makeBounce(req, sock);
-            cb(req, bounce);
+            if (cb.length === 3) {
+                cb(req, null, bounce);
+            }
+            else cb(req, bounce);
             
             sock.on('end', function () {
                 req.destroy();

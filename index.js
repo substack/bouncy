@@ -43,11 +43,17 @@ module.exports = function (opts, cb) {
                 src.write(buf);
             });
             
+            //does not fires with websocket connection
             stream.onend = function () {
                 var res = onend();
                 src.end();
                 return res;
             };
+            
+            //fires when websocket connection ends
+            stream.on('end',function(){
+                src.end();
+            });
         }
         else stream.pipe(src);
     });

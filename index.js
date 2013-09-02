@@ -32,11 +32,17 @@ module.exports = function (opts, cb) {
             var ondata = stream.ondata;
             var onend = stream.onend;
             
+            //first data event, fires once time
             stream.ondata = function (buf, i, j) {
                 var res = ondata(buf, i, j);
                 src.write(buf.slice(i, j));
                 return res;
             };
+            //second data event, fires other times
+            stream.on('data',function(buf){
+                src.write(buf);
+            });
+            
             stream.onend = function () {
                 var res = onend();
                 src.end();

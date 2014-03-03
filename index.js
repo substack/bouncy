@@ -28,7 +28,7 @@ module.exports = function (opts, cb) {
         
         // hack to work around a node 0.10 bug:
         // https://github.com/joyent/node/commit/e11668b244ee62d9997d4871f368075b8abf8d45
-		// update version upgrade 0.10 + 
+        // update version upgrade 0.10 + 
         if (process.version.match(/\.(\d+)\./)[1] >= 10) {
             var ondata = stream.ondata;
             var onend = stream.onend;

@@ -65,8 +65,9 @@ module.exports = function (opts, cb) {
     
     function onrequest (req, res) {
         var src = req.connection._bouncyStream;
-        if (src._handled) return;
-        src._handled = true;
+		//no cache stream
+        //if (src._handled) return;
+        //src._handled = true;
         
         var bounce = function (dst) {
             var args = {};
@@ -105,7 +106,7 @@ function stealthBuffer () {
     var tr = through(write, end);
     var buffer = [];
     tr._resume = function () {
-        buffer.forEach(tr.queue.bind(tr));
+        if(buffer) buffer.forEach(tr.queue.bind(tr));
         buffer = undefined;
     };
     return tr;

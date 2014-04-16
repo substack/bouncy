@@ -66,11 +66,7 @@ module.exports = function (opts, cb) {
     function onrequest (req, res) {
         var src = req.connection._bouncyStream;
 		//no cache stream
-        if (src._handled){
-			if (cb.length === 2) cb(req, src._bounce)
-			else cb(req, res, src._bounce)
-			return;
-		}
+        if (src._handled) return; 
         src._handled = true;
         
         var bounce = function (dst) {
@@ -97,7 +93,6 @@ module.exports = function (opts, cb) {
             nextTick(function () { src._resume() });
             return dst;
         };
-        src._bounce = bounce;
         if (cb.length === 2) cb(req, bounce)
         else cb(req, res, bounce)
     }

@@ -63,6 +63,9 @@ module.exports = function (opts, cb) {
     return server;
     
     function onrequest (req, res) {
+        //This somehow fixes issues #60 and 61 - multipart and long POST issues
+        req.on('data', function (buf) {});
+        
         var src = req.connection._bouncyStream;
         if (src._handled) return;
         src._handled = true;

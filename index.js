@@ -28,7 +28,8 @@ module.exports = function (opts, cb) {
         
         // hack to work around a node 0.10 bug:
         // https://github.com/joyent/node/commit/e11668b244ee62d9997d4871f368075b8abf8d45
-        if (/^v0\.10\.\d+$/.test(process.version)) {
+        // update version upgrade 0.10 + 
+        if (process.version.match(/\.(\d+)\./)[1] >= 10) {
             var ondata = stream.ondata;
             var onend = stream.onend;
             
@@ -67,7 +68,8 @@ module.exports = function (opts, cb) {
         req.on('data', function (buf) {});
         
         var src = req.connection._bouncyStream;
-        if (src._handled) return;
+		//no cache stream
+        if (src._handled) return; 
         src._handled = true;
         
         var bounce = function (dst) {
@@ -94,7 +96,6 @@ module.exports = function (opts, cb) {
             nextTick(function () { src._resume() });
             return dst;
         };
-        
         if (cb.length === 2) cb(req, bounce)
         else cb(req, res, bounce)
     }
@@ -107,7 +108,7 @@ function stealthBuffer () {
     var tr = through(write, end);
     var buffer = [];
     tr._resume = function () {
-        buffer.forEach(tr.queue.bind(tr));
+        if(buffer) buffer.forEach(tr.queue.bind(tr));
         buffer = undefined;
     };
     return tr;

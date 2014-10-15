@@ -25,7 +25,9 @@ module.exports = function (opts, cb) {
     );
     server.on(connectionEvent, function (stream) {
         var src = stream._bouncyStream = stealthBuffer();
-        
+        // Node default timeout is 120 sec.
+        if(opts.socketTimeout)
+            stream.setTimeout(opts.socketTimeout);
         // hack to work around a node 0.10 bug:
         // https://github.com/joyent/node/commit/e11668b244ee62d9997d4871f368075b8abf8d45
         if (/^v0\.10\.\d+$/.test(process.version)) {

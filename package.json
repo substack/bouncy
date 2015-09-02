@@ -26,7 +26,7 @@
     },
     "devDependencies" : {
         "tap" : "~0.4.0",
-        "websocket-server" : "~1.4.04",
+        "websocket-server": "git+https://github.com/miksago/node-websocket-server.git",
         "wsclient" : "~0.2.0",
         "chunky" : "~0.0.0",
         "concat-stream": "~1.0.0",

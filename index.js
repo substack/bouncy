@@ -85,8 +85,8 @@ module.exports = function (opts, cb) {
             src.on('error', destroy);
             dst.on('error', destroy);
             
-            var s = args.headers || args.method || args.path
-                ? src.pipe(insert(args))
+            var s = args.headers || args.method || args.path || args.addForwardedHeaders
+                ? src.pipe(insert(args, req))
                 : src
             ;
             s.pipe(dst).pipe(req.connection);
